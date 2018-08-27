@@ -7,11 +7,17 @@
   },
   "devDependencies": {
     "chai": "^4.1.2",
-    "jshint": "^2.9.6",
+    "eslint": "^5.4.0",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-promise": "^4.0.0",
+    "eslint-plugin-standard": "^3.1.0",
     "mocha": "^5.2.0",
     "uglify-js": "^3.4.8"
   },
-  "dependencies": {},
+  "dependencies": {
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/acornejo/jjv.git",
@@ -19,9 +25,15 @@
   },
   "license": "MIT",
   "scripts": {
-    "prepublish": "mkdir build; ./node_modules/.bin/uglifyjs -o build/jjv.min.js lib/jjv.js",
-    "pretest": "./node_modules/.bin/jshint -e 'js,json' ./lib ./test",
-    "test": "./node_modules/.bin/mocha -b -R spec ./test"
+    "prepublish": "mkdir build; uglifyjs -o build/jjv.min.js lib/jjv.js",
+    "pretest": "eslint ./lib ./test",
+    "test": "mocha -b -R spec ./test"
   },
-  "main": "index.js"
+  "main": "index.js",
+  "eslintConfig": {
+    "extends": "standard",
+    "rules": {
+      "semi": ["error", "always"]
+    }
+  }
 }

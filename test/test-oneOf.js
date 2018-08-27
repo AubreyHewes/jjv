@@ -1,5 +1,3 @@
-/*jshint expr:true */
-
 var jjv = require('..')();
 var expect = require('chai').expect;
 
@@ -7,7 +5,7 @@ jjv.defaultOptions.useDefault = true;
 jjv.defaultOptions.checkRequired = true;
 jjv.defaultOptions.removeAdditional = true;
 
-describe("oneOf", function () {
+describe('oneOf', function () {
   var schema = {
     type: 'object',
     properties: {
@@ -15,11 +13,11 @@ describe("oneOf", function () {
         type: 'array',
         items: {
           oneOf: [
-              { "$ref": "#/definitions/type1" },
-              { "$ref": "#/definitions/type2" },
-              { "$ref": "#/definitions/type3" },
-              { "$ref": "#/definitions/type4" }
-          ],
+            { '$ref': '#/definitions/type1' },
+            { '$ref': '#/definitions/type2' },
+            { '$ref': '#/definitions/type3' },
+            { '$ref': '#/definitions/type4' }
+          ]
         },
         minItems: 2,
         uniqueItems: true
@@ -103,10 +101,9 @@ describe("oneOf", function () {
     ]
   };
 
-  it("oneOf without removal", function () {
+  it('oneOf without removal', function () {
     var res = jjv.validate(schema, object);
     console.log(res);
     expect(res).to.be.null;
   });
-
 });

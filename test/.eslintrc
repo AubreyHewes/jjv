@@ -1,0 +1,11 @@
+{
+  "env": {
+    "mocha": true
+  },
+  "globals": {
+    "jjv": true
+  },
+  "rules": {
+    "no-unused-expressions": "off"
+  }
+}
