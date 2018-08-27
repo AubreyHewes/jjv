@@ -103,7 +103,6 @@ describe('oneOf', function () {
 
   it('oneOf without removal', function () {
     var res = jjv.validate(schema, object);
-    console.log(res);
     expect(res).to.be.null;
   });
 });

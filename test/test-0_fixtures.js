@@ -1,14 +1,14 @@
-var env = require('..')();
 var expect = require('chai').expect;
+var jjv = require('..');
 var fs = require('fs');
 var path = require('path');
 
+var tests = [];
 var TEST_DIR = path.resolve(__dirname, 'fixtures');
 var SKIP_TEST = [ 'change resolution scope' ];
-
 var files = fs.readdirSync(TEST_DIR).filter(function (x) { return x.indexOf('.json') !== -1; });
-var tests = [];
 
+var env = jjv();
 env.addSchema('http://json-schema.org/draft-04/schema', require('./draft-04-schema.json'));
 env.addSchema('http://localhost:1234/integer.json', { type: 'integer' });
 env.addSchema('http://localhost:1234/subSchemas.json', {
@@ -38,7 +38,9 @@ function runGroup (i) {
   };
 }
 
-for (var i = 0; i < files.length; i++) {
-  tests.push(require(TEST_DIR + '/' + files[ i ]));
-  describe(files[ i ], runGroup(i));
-}
+describe('fixtures', function () {
+  files.forEach(function (file, idx) {
+    tests.push(require(TEST_DIR + '/' + file));
+    describe(file, runGroup(idx));
+  });
+});
