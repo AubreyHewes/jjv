@@ -4,7 +4,7 @@ var jjv = require('..')();
 var expect = require('chai').expect;
 var draft04Schema = require("./draft-04-schema.json");
 
-describe("basic functinal test", function () {
+describe("basic functional test", function () {
   var user_schema = {
     type: 'object',
     properties: {
@@ -26,14 +26,14 @@ describe("basic functinal test", function () {
 
   it("required", function () {
     delete user_object.lastname;
-    expect(jjv.validate('user', user_object)).to.have.deep.property('validation.lastname.required', true);
+    expect(jjv.validate('user', user_object)).to.have.deep.nested.property('validation.lastname', {"required":true});
     user_object.lastname = 'last';
     expect(jjv.validate('user', user_object)).to.be.null;
   });
 
   it("additional", function () {
     user_object.nonexistentfield = 'hello there!';
-    expect(jjv.validate('user', user_object)).to.have.deep.property('validation.nonexistentfield.additional');
+    expect(jjv.validate('user', user_object)).to.have.deep.nested.property('validation.nonexistentfield.additional');
     delete user_object.nonexistentfield;
     expect(jjv.validate('user', user_object)).to.be.null;
   });
@@ -50,7 +50,7 @@ describe("basic functinal test", function () {
     it("string", function () {
       user_schema.properties.gender = { type: 'string' };
       user_object.gender = 42;
-      expect(jjv.validate('user', user_object)).to.have.deep.property('validation.gender.type', 'string');
+      expect(jjv.validate('user', user_object)).to.have.deep.nested.property('validation.gender.type', 'string');
       user_object.gender = 'whale';
       expect(jjv.validate('user', user_object)).to.be.null;
     });
@@ -58,7 +58,7 @@ describe("basic functinal test", function () {
     it("number", function () {
       user_schema.properties.gender = { type: 'number' };
       user_object.gender = 'whale';
-      expect(jjv.validate('user', user_object)).to.have.deep.property('validation.gender.type', 'number');
+      expect(jjv.validate('user', user_object)).to.have.deep.nested.property('validation.gender.type', 'number');
       user_object.gender = 42.5;
       expect(jjv.validate('user', user_object)).to.be.null;
     });
@@ -66,7 +66,7 @@ describe("basic functinal test", function () {
     it("integer", function () {
       user_schema.properties.gender = { type: 'integer' };
       user_object.gender = 42.5;
-      expect(jjv.validate('user', user_object)).to.have.deep.property('validation.gender.type', 'integer');
+      expect(jjv.validate('user', user_object)).to.have.deep.nested.property('validation.gender.type', 'integer');
       user_object.gender = 1;
       expect(jjv.validate('user', user_object)).to.be.null;
     });
@@ -74,7 +74,7 @@ describe("basic functinal test", function () {
     it("boolean", function () {
       user_schema.properties.verified = { type: 'boolean' };
       user_object.verified = 33;
-      expect(jjv.validate('user', user_object)).to.have.deep.property('validation.verified.type', 'boolean');
+      expect(jjv.validate('user', user_object)).to.have.deep.nested.property('validation.verified.type', 'boolean');
       user_object.verified = false;
       expect(jjv.validate('user', user_object)).to.be.null;
     });
@@ -84,7 +84,7 @@ describe("basic functinal test", function () {
     it("alpha", function () {
       user_schema.properties.gender = { type: 'string', format: "alpha" };
       user_object.gender = 'a42';
-      expect(jjv.validate('user', user_object)).to.have.deep.property('validation.gender.format', true);
+      expect(jjv.validate('user', user_object)).to.have.deep.nested.property('validation.gender.format', true);
       user_object.gender = 'undisclosed';
       expect(jjv.validate('user', user_object)).to.be.null;
     });
@@ -92,7 +92,7 @@ describe("basic functinal test", function () {
     it("numeric", function () {
       user_schema.properties.gender = { type: 'string', format: "numeric" };
       user_object.gender = 'a42';
-      expect(jjv.validate('user', user_object)).to.have.deep.property('validation.gender.format', true);
+      expect(jjv.validate('user', user_object)).to.have.deep.nested.property('validation.gender.format', true);
       user_object.gender = '42';
       expect(jjv.validate('user', user_object)).to.be.null;
     });
@@ -100,7 +100,7 @@ describe("basic functinal test", function () {
     it("alphanumeric", function () {
       user_schema.properties.gender = { type: 'string', format: "alphanumeric" };
       user_object.gender = 'test%-';
-      expect(jjv.validate('user', user_object)).to.have.deep.property('validation.gender.format', true);
+      expect(jjv.validate('user', user_object)).to.have.deep.nested.property('validation.gender.format', true);
       user_object.gender = 'a42';
       expect(jjv.validate('user', user_object)).to.be.null;
     });
@@ -108,7 +108,7 @@ describe("basic functinal test", function () {
     it("hexadecimal", function () {
       user_schema.properties.gender = { type: 'string', format: "hexadecimal" };
       user_object.gender = 'x44';
-      expect(jjv.validate('user', user_object)).to.have.deep.property('validation.gender.format', true);
+      expect(jjv.validate('user', user_object)).to.have.deep.nested.property('validation.gender.format', true);
       user_object.gender = 'deadbeef';
       expect(jjv.validate('user', user_object)).to.be.null;
     });
@@ -118,7 +118,7 @@ describe("basic functinal test", function () {
     it("pattern", function () {
       user_schema.properties.gender = { type: 'string', pattern: 'ale$' };
       user_object.gender = 'girl';
-      expect(jjv.validate('user', user_object)).to.have.deep.property('validation.gender.pattern', true);
+      expect(jjv.validate('user', user_object)).to.have.deep.nested.property('validation.gender.pattern', true);
       user_object.gender = 'male';
       expect(jjv.validate('user', user_object)).to.be.null;
     });
@@ -126,7 +126,7 @@ describe("basic functinal test", function () {
     it("enum", function () {
       user_schema.properties.gender = { type: 'string', 'enum': ["male", "female"] };
       user_object.gender = 'girl';
-      expect(jjv.validate('user', user_object)).to.have.deep.property('validation.gender.enum', true);
+      expect(jjv.validate('user', user_object)).to.have.deep.nested.property('validation.gender.enum', true);
       user_object.gender = 'male';
       expect(jjv.validate('user', user_object)).to.be.null;
     });
@@ -136,7 +136,7 @@ describe("basic functinal test", function () {
     it("multipleOf", function () {
       user_schema.properties.age = { type: 'number', multipleOf: 10 };
       user_object.age = 21;
-      expect(jjv.validate('user', user_object)).to.have.deep.property('validation.age.multipleOf', true);
+      expect(jjv.validate('user', user_object)).to.have.deep.nested.property('validation.age.multipleOf', true);
       user_object.age = 20;
       expect(jjv.validate('user', user_object)).to.be.null;
     });
@@ -144,7 +144,7 @@ describe("basic functinal test", function () {
     it("minimum", function () {
       user_schema.properties.age = { type: 'number', minimum: 18 };
       user_object.age = 17;
-      expect(jjv.validate('user', user_object)).to.have.deep.property('validation.age.minimum', true);
+      expect(jjv.validate('user', user_object)).to.have.deep.nested.property('validation.age.minimum', true);
       user_object.age = 18;
       expect(jjv.validate('user', user_object)).to.be.null;
     });
@@ -152,7 +152,7 @@ describe("basic functinal test", function () {
     it("maximum", function () {
       user_schema.properties.age = { type: 'number', maximum: 100 };
       user_object.age = 101;
-      expect(jjv.validate('user', user_object)).to.have.deep.property('validation.age.maximum', true);
+      expect(jjv.validate('user', user_object)).to.have.deep.nested.property('validation.age.maximum', true);
       user_object.age = 28;
       expect(jjv.validate('user', user_object)).to.be.null;
     });
@@ -197,21 +197,21 @@ describe("basic functinal test", function () {
 
     it('invalid', function () {
       user_object.role = {role_name: 'guest'};
-      expect(jjv.validate('user', user_object)).to.have.deep.property('validation.role');
+      expect(jjv.validate('user', user_object)).to.have.deep.nested.property('validation.role');
       user_object.role = {role_name: 'user'};
-      expect(jjv.validate('user', user_object)).to.have.deep.property('validation.role');
+      expect(jjv.validate('user', user_object)).to.have.deep.nested.property('validation.role');
       user_object.role = {role_name: 'admin'};
-      expect(jjv.validate('user', user_object)).to.have.deep.property('validation.role');
+      expect(jjv.validate('user', user_object)).to.have.deep.nested.property('validation.role');
       user_object.role = {role_name: 'admin', member_of: []};
-      expect(jjv.validate('user', user_object)).to.have.deep.property('validation.role');
+      expect(jjv.validate('user', user_object)).to.have.deep.nested.property('validation.role');
       user_object.role = {role_name: 'user', owner_of: []};
-      expect(jjv.validate('user', user_object)).to.have.deep.property('validation.role');
+      expect(jjv.validate('user', user_object)).to.have.deep.nested.property('validation.role');
 
       user_object.role = {role_name: 'admin', member_of: [], super_admin: false};
-      expect(jjv.validate('user', user_object)).to.have.deep.property('validation.role.schema.owner_of');
+      expect(jjv.validate('user', user_object)).to.have.deep.nested.property('validation.role.schema.owner_of');
       jjv.defaultOptions.useCoerce = true;
       user_object.role = {role_name: 'admin', member_of: [], super_admin: false};
-      expect(jjv.validate('user', user_object)).to.have.deep.property('validation.role.schema.owner_of');
+      expect(jjv.validate('user', user_object)).to.have.deep.nested.property('validation.role.schema.owner_of');
       jjv.defaultOptions.useCoerce = false;
 	});
 
@@ -256,12 +256,12 @@ describe("basic functinal test", function () {
 
     it("required", function () {
       user_object.loc = {};
-      expect(jjv.validate('user', user_object)).to.have.deep.property('validation.loc.schema').that.deep.equals({address: {required: true}, latlng: {required: true}});
+      expect(jjv.validate('user', user_object)).to.have.deep.nested.property('validation.loc.schema').that.deep.equals({address: {required: true}, latlng: {required: true}});
     });
 
     it("type", function () {
       user_object.loc = {latlng: {lat: 44, lon: 23}};
-      expect(jjv.validate('user', user_object)).to.have.deep.property('validation.loc.schema.address.required');
+      expect(jjv.validate('user', user_object)).to.have.deep.nested.property('validation.loc.schema.address.required');
       user_object.loc = {address: 'some street address', latlng: {lat: 44, lon: 23}};
       expect(jjv.validate('user', user_object)).to.be.null;
     });
@@ -373,21 +373,21 @@ describe("basic functinal test", function () {
     it("should not overwrite with a default", function () {
       user_object.path = {device: "some gps device", readings: {lat: 44, lon: 23}};
       var err = jjv.validate("user", user_object, {useDefault: true});
-      expect(err).to.have.deep.property("validation.path.schema.readings.type");
+      expect(err).to.have.deep.nested.property("validation.path.schema.readings.type");
 
       user_object.path = {device: "some gps device", readings: 0};
       err = jjv.validate("user", user_object, {useDefault: true});
-      expect(err).to.have.deep.property("validation.path.schema.readings.type");
+      expect(err).to.have.deep.nested.property("validation.path.schema.readings.type");
 
       user_object.path = {device: "some gps device", readings: false};
       err = jjv.validate("user", user_object, {useDefault: true});
-      expect(err).to.have.deep.property("validation.path.schema.readings.type");
+      expect(err).to.have.deep.nested.property("validation.path.schema.readings.type");
     });
 
     it("should validate array items", function () {
       user_object.path = {device: "some gps device", readings: [{lat: 44, long: 23}]};
       var err = jjv.validate("user", user_object, {useCoerce: true, useDefault: true});
-      expect(err).to.have.deep.property("validation.path.schema.readings.schema[0].schema.lon.required");
+      expect(err).to.have.deep.nested.property("validation.path.schema.readings.schema[0].schema.lon.required");
     });
 
     it("should coerce and clone default", function () {
