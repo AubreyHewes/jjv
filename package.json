@@ -2,6 +2,9 @@
   "name": "jjv",
   "version": "1.0.2",
   "author": "Alex Cornejo",
+  "engine": {
+    "node": "^8"
+  },
   "devDependencies": {
     "chai": "~1.8.1",
     "mocha": "~1.13.0",
